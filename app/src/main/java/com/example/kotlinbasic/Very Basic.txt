@@ -1,0 +1,46 @@
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello  $name!",
+            modifier = modifier
+        )
+    }
+
+Q1. explanation of above code snippet
+
+A1.
+That code defines a reusable UI component in Jetpack Compose, Android's modern UI toolkit. In simple terms, it's a blueprint for a piece of text on the screen that says "Hi" followed by a name you provide.
+Let's break down each part of the code snippet:
+
+@Composable
+This is an annotation that tells the Compose compiler that this function is intended to create UI. It transforms data into a UI element. Think of it as a special label that marks this function as a building block for your app's screen. All Composable functions must be called from other Composable functions.
+
+fun Greeting(name: String, modifier: Modifier = Modifier)
+This is the function declaration.
+
+fun Greeting: Defines a function named Greeting. By convention, Composable function names are capitalized.
+
+name: String: This is a parameter. It means the Greeting function must be given a piece of text (a String), like "Android" or "John", which it will use to display the message.
+modifier: Modifier = Modifier: This is an optional parameter. A Modifier is used to decorate or add behavior to a Composable, such as changing its size, adding padding, handling user input, or setting a background color. Giving it a default value of Modifier makes it optional to use.
+
+Text(...)
+This is another Composable function, provided by the Compose framework, that is used to display text on the screen.
+
+text = "Hi $name!": This sets the actual text to be displayed. The $name is a string template that inserts the value of the name parameter into the text. So if you pass "Android" as the name, the text will be "Hi Android!".
+modifier = modifier: This applies the modifier passed into the Greeting function to the Text composable. This allows you to customize the Text element from the outside when you call Greeting.
+
+How It's Used
+You would call this Greeting function from another Composable function to actually display it on the screen.
+
+
+For example:
+
+@Composable
+fun MyApp() {
+    // This will display "Hi Android!" with 16dp of padding around it.
+    Greeting(
+        name = "Android",
+        modifier = Modifier.padding(16.dp)
+    )
+}
+In this example, MyApp calls Greeting, passing in the name "Android" and a Modifier that adds padding. The Greeting function then uses these values to configure and display the Text element.

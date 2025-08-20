@@ -20,13 +20,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlinbasic.ui.theme.KotlinBasicTheme
 
-fun increaseCount(count: MutableState<Int>) {
-    count.value++
-    // You could add more logic here, like printing to the console
-    println("The count is now: ${count.value}")
-}
+//fun increaseCount(count: MutableState<Int>) {
+//    count.value++
+//    // You could add more logic here, like printing to the console
+//    println("The count is now: ${count.value}")
+//}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,14 +43,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyClickerApp() {
-    var count = remember { mutableStateOf(0) }
+    val viewModel = viewModel<MainActivityViewModel>()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = count.value.toString())
-        Button(onClick = { increaseCount(count) }) { // Calling the external function
+        Text(text = viewModel.count.value.toString())
+        Button(onClick = { viewModel.increaseCount(viewModel.count) }) { // Calling the external function
             Text("Hit")
         }
     }

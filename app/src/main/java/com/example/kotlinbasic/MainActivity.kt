@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -35,7 +36,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             KotlinBasicTheme {
-                MyClickerApp()
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    MyClickerApp()
+                }
             }
         }
     }
@@ -50,7 +53,7 @@ fun MyClickerApp() {
         modifier = Modifier.fillMaxSize()
     ) {
         Text(text = viewModel.count.value.toString())
-        Button(onClick = { viewModel.increaseCount(viewModel.count) }) { // Calling the external function
+        Button(onClick = { viewModel.increaseCount() }) { // Calling the external function
             Text("Hit")
         }
     }

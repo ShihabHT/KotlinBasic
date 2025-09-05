@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.3")
+    implementation(libs.androidx.datastore.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

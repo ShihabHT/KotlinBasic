@@ -1,5 +1,6 @@
 package com.example.jetpackcomposetutorial
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -104,6 +106,9 @@ fun Conversation(messages: List<Message>){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUiComponentHolder() {
+    // Get the current context
+    val context = LocalContext.current
+
     // State to track if the dropdown menu is expanded
     var expanded by remember { mutableStateOf(false) }
 
@@ -131,7 +136,7 @@ fun MainUiComponentHolder() {
                             DropdownMenuItem(
                                 text = { Text("Settings") },
                                 onClick = {
-                                    /* Handle settings click */
+                                    context.startActivity(Intent(context, SettingsActivity::class.java))
                                     expanded = false
                                 }
                             )

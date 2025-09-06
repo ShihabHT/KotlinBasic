@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +17,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -43,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposetutorial.ui.theme.JetpackComposeTutorialTheme
 import kotlinx.coroutines.flow.Flow
+import kotlin.math.round
 
 // DataStore extension property
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -62,6 +70,15 @@ class SettingsActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(5.dp))
                         NotificationEnabledSection(viewModel)
+
+                        Spacer(modifier = Modifier.height(5.dp))
+                        AcceptTermsSection(viewModel)
+
+                        Spacer(modifier = Modifier.height(5.dp))
+                        GenderSelectionListField(viewModel)
+
+                        Spacer(modifier = Modifier.height(5.dp))
+                        SliderAdvancedExample(viewModel)
                     }
                 }
             }
@@ -97,7 +114,7 @@ fun Greeting(viewModel: SettingsViewModel) {
 }
 
 @Composable
-fun NotificationEnabledSection(viewModel: SettingsViewModel, modifier: Modifier = Modifier){
+fun NotificationEnabledSection(viewModel: SettingsViewModel){
     val notificationEnabled by viewModel.notificationEnabledFlow.collectAsState(initial = true)
 
     Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
@@ -112,6 +129,69 @@ fun NotificationEnabledSection(viewModel: SettingsViewModel, modifier: Modifier 
     }
 }
 
+@Composable
+fun AcceptTermsSection(viewModel: SettingsViewModel){
+    val acceptTerms by viewModel.acceptTermsFlow.collectAsState(initial = true)
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
+        Text(text = "$acceptTerms")
+        Spacer(modifier = Modifier.weight(1f))
+        Checkbox(
+            checked = acceptTerms,
+            onCheckedChange = {
+                viewModel.saveAcceptTerms(it)
+            }
+        )
+    }
+}
+
+@Composable
+fun GenderSelectionListField(viewModel: SettingsViewModel) {
+    val genderOptions = listOf("Undisclosed", "Male", "Female")
+    var expanded by remember { mutableStateOf(false) }
+    val selectedGender by viewModel.genderFlow.collectAsState(initial = "Undisclosed")
+
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
+        Text(text = "Select Gender")
+        Spacer(modifier = Modifier.weight(1f))
+        Box(
+            modifier = Modifier
+                .clickable(onClick = { expanded = true })
+                .background(color = MaterialTheme.colorScheme.primary)
+        ) {
+            Text(
+                text = selectedGender,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+            )
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }
+            ) {
+                genderOptions.forEach { gender ->
+                    DropdownMenuItem(
+                        text = { Text(gender) },
+                        onClick = {
+                            viewModel.saveGender(gender)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SliderAdvancedExample(viewModel: SettingsViewModel) {
+    val sliderPosition by viewModel.sliderValueFlow.collectAsState(initial = 0f)
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
+        Text(text = sliderPosition.toString(), modifier = Modifier.padding(horizontal = 20.dp).width(50.dp))
+        Slider(
+            value = sliderPosition,
+            onValueChange = { viewModel.saveSliderValue(round(it*10)/10f)},
+            valueRange = 0f..50f
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -120,6 +200,9 @@ fun GreetingPreview() {
         Column {
             Greeting(viewModel = viewModel)
             NotificationEnabledSection(viewModel)
+            AcceptTermsSection(viewModel)
+            GenderSelectionListField(viewModel)
+            SliderAdvancedExample(viewModel)
         }
     }
 }
